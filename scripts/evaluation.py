@@ -1,6 +1,7 @@
 import joblib
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
+import pandas as pd
 
 X_test = joblib.load("outputs/results/X_test.pkl")
 y_test = joblib.load("outputs/results/y_test.pkl")
@@ -19,3 +20,12 @@ def evaluate(name, y_true, y_pred):
 
 evaluate("Linear Regression", y_test, lr_pred)
 evaluate("Random Forest", y_test, rf_pred)
+
+# Save predicted vs actual to CSV
+results_df = pd.DataFrame({
+    "Month": range(1, len(y_test)+1),
+    "Actual_Risk": y_test,
+    "Predicted_RF": rf_pred,
+    "Predicted_LR": lr_pred
+})
+results_df.to_csv("outputs/results/predicted_outbreak_risks.csv", index=False)
